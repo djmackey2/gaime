@@ -1,11 +1,10 @@
-import abc
+from abc import ABCMeta
 from abc import abstractmethod
 import time
 import random
 
 
-class BaseGameState(object):
-    __metaclass__ = abc.ABCMeta
+class BaseGameState(object, metaclass=ABCMeta):
 
     def __init__(self, parent=None, agg_fn=max, children=None):
         assert agg_fn in (max, min)
@@ -64,7 +63,7 @@ class BaseGameState(object):
 
         if not self.children:
             return self.static_score
-            
+
         if termination_time:
             if time.time() > termination_time:
                 return self.state_scores_cache[depth-1]
