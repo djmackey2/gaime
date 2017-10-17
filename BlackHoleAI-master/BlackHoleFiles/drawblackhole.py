@@ -166,4 +166,4 @@ if __name__ == "__main__":
     }
     # draw_static(S_State)
     state = dict(zip([i + 1 for i in range(21)], [None for i in range(21)]))
-    print state
+    print (state)

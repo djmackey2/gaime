@@ -135,7 +135,7 @@ def game_loop():
 
         pygame.display.flip()
     pygame.quit()
-    print msg
+    print (msg)
     quit()
 
 def delay(t):

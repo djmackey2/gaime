@@ -102,4 +102,4 @@ class BaseGameState(object):
 
 
 if __name__ == "__main__":
-    print 'Hellow, world! This is me using Python 2'
+    print ('Hellow, world! This is me using Python 2')
