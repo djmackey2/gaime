@@ -64,7 +64,7 @@ class BaseGameState(object):
 
         if not self.children:
             return self.static_score
-            
+
         if termination_time:
             if time.time() > termination_time:
                 return self.state_scores_cache[depth-1]
@@ -102,4 +102,4 @@ class BaseGameState(object):
 
 
 if __name__ == "__main__":
-    print ('Hellow, world! This is me using Python 2')
+    pass
