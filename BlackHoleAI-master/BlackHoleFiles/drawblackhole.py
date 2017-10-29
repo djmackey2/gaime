@@ -1,5 +1,5 @@
 from math import sqrt
-from game_circle import game_circle
+from BlackHoleFiles.game_circle import game_circle
 import pygame
 import time
 

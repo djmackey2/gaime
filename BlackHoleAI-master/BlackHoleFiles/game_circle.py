@@ -2,8 +2,8 @@ from math import *
 
 import pygame
 
-import button
-import colour as col
+from BlackHoleFiles import button
+from BlackHoleFiles import colour as col
 
 
 class game_circle(object):
