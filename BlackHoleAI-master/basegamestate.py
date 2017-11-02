@@ -34,6 +34,22 @@ class BaseGameState(object):
 
     @property
     @abstractmethod
+    def is_end_game(self):
+        """
+        :return: boolean indicating whether or not given game state is a terminal game state
+        """
+        pass
+
+    @property
+    @abstractmethod
+    def winning_player(self):
+        """
+        :return: returns the winning player - 0 for starting player, 1 for the second player, -1 for a tie
+        """
+        pass
+
+    @property
+    @abstractmethod
     def static_score(self):
         """
         :return: evaluation function - customize to your game

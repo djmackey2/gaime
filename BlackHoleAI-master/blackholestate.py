@@ -91,6 +91,18 @@ class BlackHoleState(BaseGameState):
     def state(self):
         return self.state_list
 
+    def is_end_game(self):
+        return sum([1 for index in range(len(self.state_list)) if self.state_list[index]]) == 20
+
+    def winning_player(self):
+        if not self.is_end_game:
+            return None
+        if self.static_score == 0:
+            return -1
+        if self.static_score > 0:
+            return 1
+        return 0
+
     def __str__(self):
         if self.string_rep:
             return self.string_rep
