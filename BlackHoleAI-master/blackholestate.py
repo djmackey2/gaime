@@ -91,6 +91,14 @@ class BlackHoleState(BaseGameState):
     def state(self):
         return self.state_list
 
+    @property
+    def monte_carlo_moves(self):
+        pass
+
+    @property
+    def make_random_move(self):
+        pass
+    
     def is_end_game(self):
         return sum([1 for index in range(len(self.state_list)) if self.state_list[index]]) == 20
 

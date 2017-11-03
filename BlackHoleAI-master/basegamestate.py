@@ -63,6 +63,24 @@ class BaseGameState(object):
         """
         raise NotImplementedError
 
+    @property
+    @abstractmethod
+    def monte_carlo_moves(self):
+        """
+        Moveset for the Monte Carlo algorithm. Leave method declared but with a pass statement if you do not
+        intend to use the Monte Carlo algorithm.
+        :return: list of moves - preferably not exhaustive - for the Monte Carlo algorithm to choose from.
+        """
+        raise NotImplementedError
+
+    @abstractmethod
+    def make_random_move(self):
+        """
+        :return: random gamestate reachable from current state. Must be a fast computation.
+        Must not call self.children - that is expensive.
+        """
+        raise NotImplementedError
+
     def dynamic_score(self, depth, termination_time=None):
         """
         :param depth: level of recursive depth to compute score
