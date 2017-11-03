@@ -63,21 +63,19 @@ class BaseGameState(object):
         """
         raise NotImplementedError
 
+    # Optional methods
     @property
-    @abstractmethod
-    def monte_carlo_moves(self):
+    def monte_carlo_moveset(self):
         """
-        Moveset for the Monte Carlo algorithm. Leave method declared but with a pass statement if you do not
-        intend to use the Monte Carlo algorithm.
+        Moveset for the Monte Carlo algorithm. Needs to be implemented to use Monte Carlo.
         :return: list of moves - preferably not exhaustive - for the Monte Carlo algorithm to choose from.
         """
         raise NotImplementedError
 
-    @abstractmethod
     def make_random_move(self):
         """
+        Needs to be implemented to use Monte Carlo. Must not call self.children - that is expensive.
         :return: random gamestate reachable from current state. Must be a fast computation.
-        Must not call self.children - that is expensive.
         """
         raise NotImplementedError
 
