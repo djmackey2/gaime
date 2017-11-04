@@ -93,7 +93,7 @@ class BaseGameState(object):
         child = self.make_random_move()
         return child.play_through_at_random()
 
-    def monte_next_move(self, player=1, num_games=20):
+    def monte_next_move(self, player=1, num_games=100):
         """
         Pass -1 as player if it is the second player.
         :return: suggested move according to Monte Carlo algorithm.
@@ -108,7 +108,7 @@ class BaseGameState(object):
                 add = child.play_through_at_random()
                 success += add
 
-            success *= player  # Account for second player state
+            success *= player  # Account for second player state, ie count wins correctly
             successes.append(success / num_games)
 
         # Pick the most successful
@@ -162,7 +162,7 @@ class BaseGameState(object):
 
         for child in self.children:
 
-            if child.state_scores_cache[depth-1] == score:
+            if child.dynamic_score(depth-1, termination_time=termination_time) == score:
                 return child
 
         # If it doesn't match any of its children, something has gone wrong. Play at random.

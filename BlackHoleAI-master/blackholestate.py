@@ -31,7 +31,9 @@ class BlackHoleState(BaseGameState):
 
     def __init__(self, state_list, parent=None, children=None):
         self.state_list = state_list
-        agg_fn = (min, max)[sum([1 for index in range(len(self.state_list)) if self.state_list[index]]) % 2]
+        self.moves_so_far = sum([1 for index in range(len(self.state_list)) if self.state_list[index]])
+        self.current_player = self.moves_so_far % 2
+        agg_fn = (min, max)[self.current_player]
         super(BlackHoleState, self).__init__(parent=parent, agg_fn=agg_fn, children=children)
         self.string_rep = ''
         self._static_score = None
@@ -41,14 +43,11 @@ class BlackHoleState(BaseGameState):
         if self._children:
             return self._children
 
-
-        moves_so_far = sum([1 for index in range(len(self.state_list)) if self.state_list[index]])
-
-        if moves_so_far == 20:
+        if self.moves_so_far == 20:
             self._children = []
             return self._children
 
-        move_tuple = BoardEntry(moves_so_far//2 + 1, moves_so_far % 2)
+        move_tuple = BoardEntry(self.moves_so_far//2 + 1, self.moves_so_far % 2)
 
         temp_state = list(self.state_list)
 
@@ -62,25 +61,24 @@ class BlackHoleState(BaseGameState):
         return self._children
 
     @property
-    def monte_carlo_moveset(self, num_moves=5):
+    def monte_carlo_moveset(self, num_moves=20):
         """
         :return: list of moves at most num_moves -not exhaustive - for the Monte Carlo algorithm to choose from.
         """
         if self._monte_carlo_moveset:
             return self._monte_carlo_moveset
         moves = []
-        moves_so_far = sum([1 for index in range(len(self.state_list)) if self.state_list[index]])
 
-        if moves_so_far == 20:
+        if self.moves_so_far == 20:
             self._children = []
             return self._children
 
-        move_tuple = BoardEntry(moves_so_far//2 + 1, moves_so_far % 2)
+        move_tuple = BoardEntry(self.moves_so_far//2 + 1, self.moves_so_far % 2)
         index = random.randint(0,20)
         indices = []
         temp_state = list(self.state_list)
 
-        for i in range(min(num_moves, 20-moves_so_far)):
+        for i in range(min(num_moves, 20 - self.moves_so_far)):
 
             while (self.state_list[index] is not None or index in indices):
                 index = random.randint(0,20)
@@ -98,10 +96,8 @@ class BlackHoleState(BaseGameState):
         """
         :return: random gamestate reachable from current state. Must be a fast computation.
         """
-        moves_so_far = sum([1 for index in range(len(self.state_list)) if self.state_list[index]])
-
         temp_state = list(self.state_list)
-        move_tuple = BoardEntry(moves_so_far//2 + 1, moves_so_far % 2)
+        move_tuple = BoardEntry(self.moves_so_far//2 + 1, self.moves_so_far % 2)
         index = random.randint(0,20)
 
         while (self.state_list[index] is not None):

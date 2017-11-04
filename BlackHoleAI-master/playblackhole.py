@@ -16,7 +16,6 @@ def game_loop():
 
     board = BHBoard(screen)
     toss = random.randint(1, 4)
-
     if toss == 1:
         temp_state = board.state
         temp_state[0] = BoardEntry(1, 0)
@@ -93,6 +92,8 @@ def game_loop():
             while time.time() < end:
                 move = bh_state.next_move(i, termination_time=end)
                 i += 1
+            # curr = [1, -1][bh_state.current_player]
+            # move = bh_state.monte_next_move(player=curr)
 
             board.update_to_state(move.state)
             cpu_player = 0
