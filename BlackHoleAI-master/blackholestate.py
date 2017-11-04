@@ -97,11 +97,11 @@ class BlackHoleState(BaseGameState):
     def winning_player(self):
         if not self.is_end_game:
             return None
-        if self.static_score == 0:
+        if self.static_score == 0: # Tie
+            return 0
+        if self.static_score > 0: # Player 2 wins
             return -1
-        if self.static_score > 0:
-            return 1
-        return 0
+        return 1  # Player 1 wins
 
     def __str__(self):
         if self.string_rep:

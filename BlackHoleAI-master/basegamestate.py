@@ -44,7 +44,7 @@ class BaseGameState(object):
     @abstractmethod
     def winning_player(self):
         """
-        :return: returns the winning player - 0 for starting player, 1 for the second player, -1 for a tie
+        :return: returns the winning player - 1 for starting player, -1 for the second player, 0 for a tie
         """
         pass
 
