@@ -1,5 +1,6 @@
 from basegamestate import BaseGameState
 from boardentry import BoardEntry
+import random
 
 class BlackHoleState(BaseGameState):
 
@@ -61,6 +62,57 @@ class BlackHoleState(BaseGameState):
         return self._children
 
     @property
+    def monte_carlo_moveset(self, num_moves=5):
+        """
+        :return: list of moves at most num_moves -not exhaustive - for the Monte Carlo algorithm to choose from.
+        """
+        if self._monte_carlo_moveset:
+            return self._monte_carlo_moveset
+        moves = []
+        moves_so_far = sum([1 for index in range(len(self.state_list)) if self.state_list[index]])
+
+        if moves_so_far == 20:
+            self._children = []
+            return self._children
+
+        move_tuple = BoardEntry(moves_so_far//2 + 1, moves_so_far % 2)
+        index = random.randint(0,20)
+        indices = []
+        temp_state = list(self.state_list)
+
+        for i in range(min(num_moves, 20-moves_so_far)):
+
+            while (self.state_list[index] is not None or index in indices):
+                index = random.randint(0,20)
+
+            temp_state[index] = move_tuple
+            child = BlackHoleState(temp_state)
+            moves.append(child)
+            temp_state = list(self.state_list)
+            indices.append(index)
+
+        self._monte_carlo_moveset = moves
+        return self._monte_carlo_moveset
+
+    def make_random_move(self):
+        """
+        :return: random gamestate reachable from current state. Must be a fast computation.
+        """
+        moves_so_far = sum([1 for index in range(len(self.state_list)) if self.state_list[index]])
+
+        temp_state = list(self.state_list)
+        move_tuple = BoardEntry(moves_so_far//2 + 1, moves_so_far % 2)
+        index = random.randint(0,20)
+
+        while (self.state_list[index] is not None):
+            index = random.randint(0,20)
+
+        temp_state[index] = move_tuple
+        child = BlackHoleState(temp_state)
+
+        return child
+
+    @property
     def static_score(self):
         if self._static_score:
             return self._static_score
@@ -91,9 +143,10 @@ class BlackHoleState(BaseGameState):
     def state(self):
         return self.state_list
 
+    @property
     def is_end_game(self):
         return sum([1 for index in range(len(self.state_list)) if self.state_list[index]]) == 20
-
+    @property
     def winning_player(self):
         if not self.is_end_game:
             return None
@@ -111,4 +164,11 @@ class BlackHoleState(BaseGameState):
         return self.string_rep
 
 if __name__ == "__main__":
-    pass
+    sample_state = [None for index in range(21)]
+    test_obj = BlackHoleState(sample_state)
+    for i in test_obj.monte_carlo_moveset:
+        print (i)
+        # print (i.make_random_move())
+
+    print ('\n\n')
+    print (test_obj.monte_next_move())

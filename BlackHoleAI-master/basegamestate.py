@@ -14,6 +14,7 @@ class BaseGameState(object):
             self._children = children
         else:
             self._children = []
+        self._monte_carlo_moveset = []
         self.state_scores_cache = {}
         self.agg_fn = agg_fn
 
@@ -44,7 +45,10 @@ class BaseGameState(object):
     @abstractmethod
     def winning_player(self):
         """
-        :return: returns the winning player - 1 for starting player, -1 for the second player, 0 for a tie
+        :return: returns the winning player -
+        1  for starting player
+        -1 for the second player
+        0  for a tie
         """
         pass
 
@@ -78,6 +82,38 @@ class BaseGameState(object):
         :return: random gamestate reachable from current state. Must be a fast computation.
         """
         raise NotImplementedError
+
+    def play_through_at_random(self):
+        """
+        :return: result of a game played at random starting from the self state.
+        """
+        if self.is_end_game:
+            return self.winning_player
+
+        child = self.make_random_move()
+        return child.play_through_at_random()
+
+    def monte_next_move(self, player=1, num_games=20):
+        """
+        Pass -1 as player if it is the second player.
+        :return: suggested move according to Monte Carlo algorithm.
+        """
+        # Loop through all the moves in moveset
+        successes = []
+        moves = self.monte_carlo_moveset
+        for child in moves:
+            # Calculate success rate of each move
+            success = 0
+            for game in range(num_games):
+                add = child.play_through_at_random()
+                success += add
+
+            success *= player  # Account for second player state
+            successes.append(success / num_games)
+
+        # Pick the most successful
+        return moves[successes.index(max(successes))]
+
 
     def dynamic_score(self, depth, termination_time=None):
         """
@@ -126,10 +162,10 @@ class BaseGameState(object):
 
         for child in self.children:
 
-            if child.dynamic_score(depth-1, termination_time=termination_time) == score:
+            if child.state_scores_cache[depth-1] == score:
                 return child
 
-        # If it doesn't match any of its children
+        # If it doesn't match any of its children, something has gone wrong. Play at random.
         return self.children[random.randint(0, len(self.children)-1)]
 
 
