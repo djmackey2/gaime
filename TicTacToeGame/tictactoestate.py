@@ -4,25 +4,33 @@ import random
 class TicTacToeState(BaseGameState):
 
 
-    winning_states = {
-        1: ['X', 'X', 'X', None, None, None, None, None, None],
-        2: [None, None, None, 'X', 'X', 'X', None, None, None],
-        3: [None, None, None, None, None, None, 'X', 'X', 'X'],
-        4: ['X', None, None, 'x', None, None, 'X', None, None],
-        5: [None, 'X', None, None, 'X', None, None, 'X', None],
-        6: [None, None, 'X', None, None, 'X', None, None, 'X'],
-        7: ['X', None, None, None, 'X', None, None, None, 'X'],
-        8: [None, None, 'X', None, 'X', None, 'X', None, None],
-        9: ['O', 'O', 'O', None, None, None, None, None, None],
-        10: [None, None, None, 'O', 'O', 'O', None, None, None],
-        11: [None, None, None, None, None, None, 'O', 'O', 'O'],
-        12: ['O', None, None, 'O', None, None, 'O', None, None],
-        13: [None, 'O', None, None, 'O', None, None, 'O', None],
-        14: [None, None, 'O', None, None, 'O', None, None, 'O'],
-        15: ['O', None, None, None, 'O', None, None, None, 'O'],
-        16: [None, None, 'O', None, 'O', None, 'O', None, None]
-
-    }
+    # winning_states = {
+    #     1: ['X', 'X', 'X', None, None, None, None, None, None],
+    #     2: [None, None, None, 'X', 'X', 'X', None, None, None],
+    #     3: [None, None, None, None, None, None, 'X', 'X', 'X'],
+    #     4: ['X', None, None, 'x', None, None, 'X', None, None],
+    #     5: [None, 'X', None, None, 'X', None, None, 'X', None],
+    #     6: [None, None, 'X', None, None, 'X', None, None, 'X'],
+    #     7: ['X', None, None, None, 'X', None, None, None, 'X'],
+    #     8: [None, None, 'X', None, 'X', None, 'X', None, None],
+    #     9: ['O', 'O', 'O', None, None, None, None, None, None],
+    #     10: [None, None, None, 'O', 'O', 'O', None, None, None],
+    #     11: [None, None, None, None, None, None, 'O', 'O', 'O'],
+    #     12: ['O', None, None, 'O', None, None, 'O', None, None],
+    #     13: [None, 'O', None, None, 'O', None, None, 'O', None],
+    #     14: [None, None, 'O', None, None, 'O', None, None, 'O'],
+    #     15: ['O', None, None, None, 'O', None, None, None, 'O'],
+    #     16: [None, None, 'O', None, 'O', None, 'O', None, None]
+    #
+    # }
+    WIN_INDICE_LISTS = [[0, 1, 2],
+                        [0, 3, 6],
+                        [0, 4, 8],
+                        [1, 4, 7],
+                        [2, 5, 8],
+                        [3, 4, 5],
+                        [6, 7, 8],
+                        [2, 4, 6]]
 
     def __init__(self, state_list, parent=None, children=None):
         self.state_list = state_list
@@ -82,59 +90,76 @@ class TicTacToeState(BaseGameState):
     def state(self):
         return self.state_list
 
-    #@property
+    @property
     def is_end_game(self):
         if self.moves_so_far == 9:
             return True
 
-        x_list = self.isolate_x()
-        o_list = self.isolate_o()
-        winner = self.find_winner(x_list, o_list)
+        for index_list in self.WIN_INDICE_LISTS:
+            win_flag = True
+            for each_index, each in enumerate(index_list):
 
-        if winner == 'X' or winner == 'O':
-            return True
+                if not(self.state_list[each] and self.state_list[each] == self.state_list[index_list[each_index-1]]):
+                    win_flag = False
+                    break
+
+            if win_flag:
+                return True
 
         return False
 
 
-    def find_winner(self, x_list, o_list):
-        for i in range(0, 9):
-            temp_win = self.winning_states.get(i)
-            if x_list == temp_win:
-                return 'X'
-        for i in range(9, 17):
-            temp_win = self.winning_states.get(i)
-            if o_list == temp_win:
-                return 'O'
+        # x_list = self.isolate_x()
+        # o_list = self.isolate_o()
+        # winner = self.find_winner(x_list, o_list)
+        #
+        # if winner == 'X' or winner == 'O':
+        #     return True
+        #
+        # return False
 
 
-    def isolate_x(self):
-        x_list = [el for el in self.state_list]
-        for i in range(len(self.state_list)):
-            if x_list[i] == 'O':
-                x_list[i] = None
-        return x_list
+    # def find_winner(self, x_list, o_list):
+    #     for i in range(0, 9):
+    #         temp_win = self.winning_states.get(i)
+    #         if x_list == temp_win:
+    #             return 'X'
+    #     for i in range(9, 17):
+    #         temp_win = self.winning_states.get(i)
+    #         if o_list == temp_win:
+    #             return 'O'
 
-    def isolate_o(self):
-        o_list = [el for el in self.state_list]
-        for i in range(len(self.state_list)):
-            if o_list[i] == 'X':
-                o_list[i] = None
-        return o_list
 
-    #@property
+    # def isolate_x(self):
+    #     x_list = [el for el in self.state_list]
+    #     for i in range(len(self.state_list)):
+    #         if x_list[i] == 'O':
+    #             x_list[i] = None
+    #     return x_list
+
+    # def isolate_o(self):
+    #     o_list = [el for el in self.state_list]
+    #     for i in range(len(self.state_list)):
+    #         if o_list[i] == 'X':
+    #             o_list[i] = None
+    #     return o_list
+
+    @property
     def winning_player(self):
-        if self.is_end_game:
-            x_list = self.isolate_x()
-            o_list = self.isolate_o()
-            winner = self.find_winner(x_list, o_list)
-            if winner == 'X':
-                return 1
-            elif winner == 'O':
+        for index_list in self.WIN_INDICE_LISTS:
+            win_flag = True
+            for each_index, each in enumerate(index_list):
+
+                if not(self.state_list[each] and self.state_list[each] == self.state_list[index_list[each_index-1]]):
+                    win_flag = False
+                    break
+
+            if win_flag:
+                sym = self.state_list[index_list[0]]
+                if sym == 'X':
+                    return 1
                 return -1
-            else:
-                return 0
-        return None
+        return 0
 
 
 
@@ -166,9 +191,12 @@ class TicTacToeState(BaseGameState):
         return self.string_rep
 
 if __name__ == '__main__':
-    test_obj = TicTacToeState(['X', None, None, 'O', 'X', None, 'O', None, 'X'])
-    test_obj2 = TicTacToeState(['O', 'O', 'O', 'X', None, 'O', None, 'O', None])
+    test_obj = TicTacToeState(['X', None, None, 'X', 'O', 'O', None, None, None])
+    test_obj2 = TicTacToeState(['O', 'O', 'X', 'X', 'O', 'O', 'X', 'X', 'X'])
     #print (test_obj, end='\n')
     #print ('\n'.join([str(child) for child in test_obj.monte_carlo_moveset]), end='')
-    print(test_obj2.is_end_game())
-    print(test_obj2.winning_player())
+    # print(test_obj2.is_end_game)
+    # print(test_obj.is_end_game)
+    # print(test_obj2.winning_player)
+    print (test_obj, end='')
+    print (test_obj.monte_next_move(player=1), end='')
