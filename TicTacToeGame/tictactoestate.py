@@ -191,7 +191,7 @@ class TicTacToeState(BaseGameState):
         return self.string_rep
 
 if __name__ == '__main__':
-    test_obj = TicTacToeState(['X', None, None, 'X', 'O', 'O', None, None, None])
+    test_obj = TicTacToeState(['X', 'O', None, 'X', 'O', 'X', None, None, None])
     test_obj2 = TicTacToeState(['O', 'O', 'X', 'X', 'O', 'O', 'X', 'X', 'X'])
     #print (test_obj, end='\n')
     #print ('\n'.join([str(child) for child in test_obj.monte_carlo_moveset]), end='')
@@ -199,4 +199,4 @@ if __name__ == '__main__':
     # print(test_obj.is_end_game)
     # print(test_obj2.winning_player)
     print (test_obj, end='')
-    print (test_obj.monte_next_move(player=1), end='')
+    print (test_obj.monte_next_move(player=-1), end='')
