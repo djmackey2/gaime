@@ -1,0 +1,2 @@
+class GameLogger(object):
+    pass
